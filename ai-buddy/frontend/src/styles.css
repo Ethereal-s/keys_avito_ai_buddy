@@ -1,0 +1,32 @@
+:root { font-family: system-ui, sans-serif; color: #1a1a1a; background: #f4f5f7; }
+body { margin: 0; }
+.center { text-align: center; margin-top: 4rem; }
+.layout { display: grid; grid-template-columns: 1fr 360px; gap: 16px; max-width: 1100px; margin: 0 auto; padding: 16px; }
+header { grid-column: 1 / -1; display: flex; gap: 16px; align-items: center; }
+header span { margin-left: auto; color: #555; }
+.card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.chat { display: flex; flex-direction: column; height: 70vh; margin: 0; }
+.msgs { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 0; }
+.msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; white-space: pre-wrap; }
+.msg.user { align-self: flex-end; background: #965eeb; color: #fff; }
+.msg.assistant { align-self: flex-start; background: #eef0f3; }
+.msg small { display: block; margin-top: 6px; color: #666; }
+.msg button { display: block; margin-top: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: #e8f9ee; color: #1a1a1a; border: 1px solid #00c853; border-radius: 16px; padding: 4px 10px; cursor: pointer; }
+.input { display: flex; gap: 8px; }
+.input input { flex: 1; }
+input, select { padding: 8px; border: 1px solid #ccc; border-radius: 8px; font: inherit; }
+button { background: #00a2ff; color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; font: inherit; }
+button:disabled { opacity: .5; cursor: default; }
+button.link { background: none; color: #00a2ff; }
+.chip:disabled { opacity: .5; }
+.task { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0; align-items: center; }
+.task .done { text-decoration: line-through; color: #888; }
+progress { width: 100%; }
+h3, h4 { margin: 8px 0; }
+.err { color: #d32f2f; }
+.hint { color: #777; font-size: .9rem; }
+.login { max-width: 320px; margin: 10vh auto; display: flex; flex-direction: column; gap: 10px; }
+@media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+button.danger { background: #ff4053; }

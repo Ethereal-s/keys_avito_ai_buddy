@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: aibuddy
+      POSTGRES_PASSWORD: aibuddy
+      POSTGRES_DB: aibuddy
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aibuddy"]
+      interval: 3s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgres://aibuddy:aibuddy@db:5432/aibuddy?sslmode=disable
+      PORT: "8080"
+      ABSENCE_URL: http://localhost:8080/mock/absence
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.openai.com/v1}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
+    depends_on:
+      db: { condition: service_healthy }
+
+  frontend:
+    build: ./frontend
+    ports: ["3000:80"]
+    depends_on: [backend]
+
+  # --- тесты: docker compose --profile test run --rm tests ---
+  db-test:
+    image: postgres:16-alpine
+    profiles: [test]
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    tmpfs: [/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 3s
+      retries: 20
+
+  tests:
+    build: { context: ./backend, target: test }
+    profiles: [test]
+    environment:
+      TEST_DATABASE_URL: postgres://test:test@db-test:5432/test?sslmode=disable
+    volumes: ["./coverage:/out"]
+    depends_on:
+      db-test: { condition: service_healthy }
+
+volumes:
+  pgdata:
